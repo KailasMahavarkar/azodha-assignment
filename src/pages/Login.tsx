@@ -37,8 +37,8 @@ const Login = () => {
 
     return (
         <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
+            <div className="hero-content flex flex-col">
+                <div className="text-center">
                     <h1 className="text-5xl font-bold">Welcome Back!</h1>
                     <p className="py-6">
                         Sign in to continue your onboarding journey. Use the demo credentials to get started.
@@ -109,7 +109,7 @@ const Login = () => {
                             </div>
                         )}
 
-                        <div className="form-control mt-6">
+                        <div className="form-control mt-6 flex justify-center">
                             <button type="submit" className="btn btn-primary">
                                 Sign In
                             </button>
