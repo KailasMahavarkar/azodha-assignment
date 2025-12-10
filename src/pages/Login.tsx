@@ -1,0 +1,144 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useAppDispatch } from '../store/hooks';
+import { login } from '../store/slices/authSlice';
+import { DEMO_CREDENTIALS } from '../utils/constants';
+
+
+
+const Login = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [error, setError] = useState('');
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        validationSchema: Yup.object({
+            username: Yup.string().required('Username is required'),
+            password: Yup.string().required('Password is required'),
+        }),
+        onSubmit: (values) => {
+            if (
+                values.username === DEMO_CREDENTIALS.username &&
+                values.password === DEMO_CREDENTIALS.password
+            ) {
+                dispatch(login(values.username));
+                navigate('/onboarding');
+            } else {
+                setError('Invalid username or password');
+            }
+        },
+    });
+
+    return (
+        <div className="hero min-h-screen bg-base-200">
+            <div className="hero-content flex-col lg:flex-row-reverse">
+                <div className="text-center lg:text-left">
+                    <h1 className="text-5xl font-bold">Welcome Back!</h1>
+                    <p className="py-6">
+                        Sign in to continue your onboarding journey. Use the demo credentials to get started.
+                    </p>
+                </div>
+                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                    <form onSubmit={formik.handleSubmit} className="card-body">
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Username</span>
+                            </label>
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.username}
+                                placeholder="Enter your username"
+                                className={`input input-bordered ${formik.touched.username && formik.errors.username ? 'input-error' : ''
+                                    }`}
+                            />
+                            {formik.touched.username && formik.errors.username && (
+                                <label className="label">
+                                    <span className="label-text-alt text-error text-sm ">{formik.errors.username}</span>
+                                </label>
+                            )}
+                        </div>
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Password</span>
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.password}
+                                placeholder="Enter your password"
+                                className={`input input-bordered ${formik.touched.password && formik.errors.password ? 'input-error' : ''
+                                    }`}
+                            />
+                            {formik.touched.password && formik.errors.password && (
+                                <label className="label">
+                                    <span className="label-text-alt text-error">{formik.errors.password}</span>
+                                </label>
+                            )}
+                        </div>
+
+                        {error && (
+                            <div className="alert alert-error">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="stroke-current shrink-0 h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                <span>{error}</span>
+                            </div>
+                        )}
+
+                        <div className="form-control mt-6">
+                            <button type="submit" className="btn btn-primary">
+                                Sign In
+                            </button>
+                        </div>
+
+                        <div className="alert alert-info mt-4">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="stroke-current shrink-0 w-6 h-6"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                ></path>
+                            </svg>
+                            <div>
+                                <div className="text-xs">Demo Credentials</div>
+                                <div className="font-mono font-bold">{DEMO_CREDENTIALS.username} / {DEMO_CREDENTIALS.password}</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;
